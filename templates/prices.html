@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prices</title>
+  <style>
+    pre {
+      background: #f6f8fa;
+      padding: 1em;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Select area and date</h1>
+
+  <label for="area">Area:</label>
+  <select id="area"></select>
+
+  <label for="date">Date:</label>
+  <input type="date" id="date">
+
+  <h2>Result</h2>
+  <pre><code id="result">// Select a date and area</code></pre>
+
+  <script>
+    const validAreas = [
+      { value: 'se1', label: 'SE1' },
+      { value: 'se2', label: 'SE2' },
+      { value: 'se3', label: 'SE3' },
+      { value: 'se4', label: 'SE4' }
+    ]
+    const areaInput = document.getElementById('area')
+    const dateInput = document.getElementById('date')
+    const result = document.getElementById('result')
+
+    // Populate select
+    validAreas.forEach(a => {
+      const o = document.createElement('option')
+      o.value = a.value
+      o.textContent = a.label
+      areaInput.appendChild(o)
+    })
+
+    // Explicitly select a default area
+    areaInput.value = validAreas[0].value
+
+    // Date limits
+    const today = new Date().toISOString().split('T')[0]
+    dateInput.max = today
+    dateInput.min = '2000-01-01'
+
+    async function loadData() {
+      const date = dateInput.value
+      const area = areaInput.value
+
+      if (!date) {
+        return
+      }
+
+      result.textContent = 'Loading...'
+
+      try {
+        const response = await fetch(
+          `/prices/${area}/${date}`
+        )
+        const data = await response.json()
+        result.textContent = JSON.stringify(data, null, 2)
+      } catch (err) {
+        result.textContent = `Error: ${err.message}`
+      }
+    }
+
+    dateInput.addEventListener('change', loadData)
+    areaInput.addEventListener('change', loadData)
+  </script>
+</body>
+</html>

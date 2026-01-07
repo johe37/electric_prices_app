@@ -16,10 +16,6 @@ dev:
 	@echo "Starting $(APP_NAME) in development mode..."
 	pipenv run fastapi dev main.py
 
-	# Example command, adjust as needed
-	# python app.py --env=dev
-	# or for Node.js: node app.js --env=dev
-
 # Run in production mode
 .PHONY: prod
 run-prod:

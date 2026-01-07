@@ -68,7 +68,7 @@ async def read_sample(request: Request):
             ]
             print(times[0])
 
-            return templates.TemplateResponse("index.html", {
+            return templates.TemplateResponse("sample.html", {
                 "request": request,
                 "prices": prices,
                 "times": times
@@ -78,6 +78,11 @@ async def read_sample(request: Request):
             content=f"<h1>Fel</h1><p>Kunde inte läsa sample_data.json: {e}</p>",
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@app.get("/prices", response_class=HTMLResponse)
+async def read_prices(request: Request):
+    return templates.TemplateResponse("prices.html", { "request": request})
 
 
 @app.get("/prices/{price_class}/{date}", response_model=List[dict])
