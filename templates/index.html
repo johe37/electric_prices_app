@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elpriser {{ date }}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', path='styles/global.css') }}">
+  <script src="{{ url_for('static', path='vendor/chart.js') }}"></script>
+</head>
+
+<body>
+  <h1>Elpriser {{ price_class }} – {{ date }}</h1>
+
+  <div
+    id="chart-container"
+    data-prices='{{ prices | tojson }}'
+    data-times='{{ times | tojson }}'
+  >
+    <canvas id="priceChart"></canvas>
+  </div>
+
+  <footer>
+    Elpriser tillhandahålls av
+    <a href="https://www.elprisetjustnu.se" target="_blank">
+      elprisetjustnu.se
+    </a>
+  </footer>
+
+  <script src="{{ url_for('static', path='scripts/priceChart.js') }}"></script>
+</body>
+</html>

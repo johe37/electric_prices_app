@@ -1,5 +1,6 @@
 import json
 import datetime
+import httpx
 
 from fastapi import FastAPI, Request, status
 from fastapi.responses import HTMLResponse
@@ -19,8 +20,34 @@ app.include_router(api_router)
 
 
 @app.get("/")
-def read_root():
-    pass
+async def index(request: Request):
+  today = datetime.date.today()
+  price_class = "SE3"
+
+  url = f"https://www.elprisetjustnu.se/api/v1/prices/{today:%Y/%m-%d}_{price_class}.json"
+
+  async with httpx.AsyncClient() as client:
+    resp = await client.get(url)
+    resp.raise_for_status()
+
+  data = resp.json()
+
+  prices = [d["SEK_per_kWh"] for d in data]
+  times = [
+    datetime.datetime.fromisoformat(d["time_start"]).strftime("%H:%M")
+    for d in data
+  ]
+
+  return templates.TemplateResponse(
+    "index.html",
+    {
+      "request": request,
+      "prices": prices,
+      "times": times,
+      "date": today.strftime("%Y-%m-%d"),
+      "price_class": price_class,
+    }
+  )
 
 @app.get("/sample", response_class=HTMLResponse)
 async def read_sample(request: Request):
