@@ -7,8 +7,8 @@ APP_NAME = myapp
 .PHONY: help
 help:
 	@echo "Available commands:"
-	@echo "  make run-dev   - Run the app in development mode"
-	@echo "  make run-prod  - Run the app in production mode"
+	@echo "  make dev   - Run the app in development mode"
+	@echo "  make prod  - Run the app in production mode"
 
 # Run in development mode
 .PHONY: dev
